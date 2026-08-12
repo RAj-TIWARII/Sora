@@ -1,121 +1,134 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
+import { useEffect, useRef, useState } from 'react'
 import './App.css'
 
+const phases = [
+  {
+    number: '01',
+    title: <>Some things<br />begin <em>quietly.</em></>,
+    body: <>A seed beneath the earth.<br />A little rain.<br />And enough time to grow.</>,
+  },
+  {
+    number: '02',
+    title: <>Then it<br />takes <em>root.</em></>,
+    body: <>Slowly, almost unseen,<br />life begins to settle into place.</>,
+  },
+  {
+    number: '03',
+    title: <>Little by<br /><em>little.</em></>,
+    body: <>A stem becomes a branch.<br />A branch reaches for the light.</>,
+  },
+]
+
 function App() {
-  const [count, setCount] = useState(0)
+  const audioRef = useRef(null)
+  const [playing, setPlaying] = useState(false)
+  const [phaseIndex, setPhaseIndex] = useState(0)
+
+  useEffect(() => {
+    const onKeyDown = (event) => {
+      if (event.key === 'ArrowDown') {
+        setPhaseIndex((index) => Math.min(index + 1, phases.length - 1))
+      }
+      if (event.key === 'ArrowUp') {
+        setPhaseIndex((index) => Math.max(index - 1, 0))
+      }
+    }
+
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [])
+
+  const toggleMusic = async () => {
+    const audio = audioRef.current
+    if (!audio) return
+
+    audio.volume = 0.37
+
+    try {
+      if (audio.paused) {
+        await audio.play()
+        setPlaying(true)
+      } else {
+        audio.pause()
+        setPlaying(false)
+      }
+    } catch {
+      setPlaying(false)
+    }
+  }
+
+  const currentPhase = phases[phaseIndex]
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <main className="sora">
+      <audio ref={audioRef} src="/audio/ambient.mp3" loop preload="auto" />
 
-      <div className="ticks"></div>
+      <section className="hero">
+        <header className="nav">
+          <div className="logo">SORA</div>
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
+          <button className="sound" type="button" onClick={toggleMusic}>
+            <span className={`sound-dot ${playing ? 'is-playing' : ''}`} />
+            {playing ? 'Sound on · 37%' : 'Sound off · 37%'}
+          </button>
+        </header>
+
+        <div className="phaseArea">
+          <div className="phase" key={phaseIndex}>
+            <div className="phaseLabel">
+              <span>{currentPhase.number}</span>
+              <span className="line" />
+              <span>THE BEGINNING</span>
+            </div>
+
+            <h1>{currentPhase.title}</h1>
+
+            <p>{currentPhase.body}</p>
+
+            <button
+              className="journey"
+              type="button"
+              onClick={() => setPhaseIndex((index) => Math.min(index + 1, phases.length - 1))}
+            >
+              {phaseIndex === phases.length - 1 ? 'Stay awhile' : 'Continue'}
+              <span>↘</span>
+            </button>
+          </div>
         </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
+
+        <div className="treeArea" aria-hidden="true">
+          <div className="warmGlow" />
+
+          <div className="leafDrift leafDriftOne">🍂</div>
+          <div className="leafDrift leafDriftTwo">🍂</div>
+          <div className="leafDrift leafDriftThree">🍂</div>
+          <div className="leafDrift leafDriftFour">🍂</div>
+
+          <div className="treeScene">
+            <img src="/images/tree.png" className="tree" alt="" />
+          </div>
+        </div>
+
+        <div className="phaseRail" aria-label="Story phases">
+          {phases.map((phase, index) => (
+            <button
+              key={phase.number}
+              type="button"
+              aria-label={`Go to phase ${phase.number}`}
+              className={index === phaseIndex ? 'active' : ''}
+              onClick={() => setPhaseIndex(index)}
+            >
+              {phase.number}
+            </button>
+          ))}
+        </div>
+
+        <div className="scrollHint">
+          <span>SCROLL</span>
+          <div className="scrollLine" />
         </div>
       </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+    </main>
   )
 }
 
