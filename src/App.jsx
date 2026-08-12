@@ -1,89 +1,75 @@
+import { useEffect, useState } from 'react'
 import './App.css'
+import treeArtwork from './assets/hero.png'
 
-const leaves = Array.from({ length: 16 }, (_, index) => index)
-const petals = Array.from({ length: 10 }, (_, index) => index)
+const phases = [
+  { id: 'beginning', number: '01', kicker: 'The beginning', title: <>Some things<br /><em>begin quietly.</em></>, text: 'A seed beneath the earth. A little rain. And enough time to grow.', accent: 'dawn' },
+  { id: 'roots', number: '02', kicker: 'Taking root', title: <>Then it<br /><em>takes root.</em></>, text: 'Slowly, almost unseen, life settles into its place and reaches for the light.', accent: 'morning' },
+  { id: 'growing', number: '03', kicker: 'Growing', title: <>Little by<br /><em>little.</em></>, text: 'A stem becomes a branch. A branch becomes shade. Time does the rest.', accent: 'golden' },
+]
 
 function App() {
+  const [activePhase, setActivePhase] = useState(0)
+  const [musicOn, setMusicOn] = useState(false)
+
+  useEffect(() => {
+    const sections = document.querySelectorAll('[data-phase]')
+    const observer = new IntersectionObserver((entries) => {
+      const visible = entries.filter((entry) => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0]
+      if (visible) setActivePhase(Number(visible.target.dataset.phase))
+    }, { threshold: [0.25, 0.5, 0.75], rootMargin: '-10% 0px -10% 0px' })
+    sections.forEach((section) => observer.observe(section))
+    return () => observer.disconnect()
+  }, [])
+
+  const phase = phases[activePhase]
+  const moveToPhase = (index) => document.getElementById(phases[index].id)?.scrollIntoView({ behavior: 'smooth' })
+
   return (
-    <main className="sora">
+    <main className={`sora theme-${phase.accent}`}>
       <header className="nav">
-        <a className="logo" href="#top" aria-label="Sora home">SORA</a>
-        <nav className="navLinks" aria-label="Main navigation">
-          <a href="#story">Story</a>
-          <a href="#about">About</a>
-          <a href="#begin">Begin</a>
-        </nav>
+        <a className="logo" href="#beginning">SORA</a>
+        <div className="navRight">
+          <span className="season">A quiet place to grow</span>
+          <button className={`sound ${musicOn ? 'on' : ''}`} onClick={() => setMusicOn((value) => !value)}>
+            <span className="soundIcon">◌</span>{musicOn ? '37%' : 'Sound'}
+          </button>
+        </div>
       </header>
 
-      <section className="hero" id="top">
-        <div className="heroCopy">
-          <p className="eyebrow">A quiet place to begin</p>
-          <h1>Let something<br /><em>grow.</em></h1>
-          <p className="heroText">
-            Sora is a little corner of the internet for planting,
-            growing, and remembering the things that matter.
-          </p>
-          <a className="primaryButton" href="#begin">Begin the journey <span>↗</span></a>
-        </div>
+      <div className="ambient" aria-hidden="true" />
 
-        <div className="scene" aria-label="A peaceful animated tree">
-          <div className="sunGlow" />
-          <div className="airParticles" aria-hidden="true">
-            {petals.map((petal) => <i key={petal} style={{ '--i': petal }} />)}
-          </div>
-          <div className="fallingLeaves" aria-hidden="true">
-            {leaves.map((leaf) => <i key={leaf} style={{ '--i': leaf }} />)}
-          </div>
+      <div className="treeStage" aria-hidden="true">
+        <div className="treeHalo" />
+        <div className="treeBreath"><img src={treeArtwork} alt="" className="realTree" /></div>
+        <div className="windLayer">{Array.from({ length: 11 }, (_, index) => <i key={index} style={{ '--i': index }} />)}</div>
+        <div className="leafLayer">{Array.from({ length: 14 }, (_, index) => <i key={index} style={{ '--i': index }} />)}</div>
+        <div className="mist mistOne" /><div className="mist mistTwo" />
+      </div>
 
-          <div className="treeIllustration" aria-hidden="true">
-            <div className="canopy canopyBack" />
-            <div className="canopy canopyMain" />
-            <div className="canopy canopyFront" />
-            <div className="branch branchOne" />
-            <div className="branch branchTwo" />
-            <div className="branch branchThree" />
-            <div className="trunk" />
-            <div className="ground" />
-            <div className="grass grassOne" />
-            <div className="grass grassTwo" />
-          </div>
+      <div className="phaseRail">
+        {phases.map((item, index) => <button key={item.id} className={index === activePhase ? 'active' : ''} onClick={() => moveToPhase(index)}><span>{item.number}</span><i /></button>)}
+      </div>
 
-          <p className="sceneCaption">a little life, moving with the wind</p>
+      <section className="story" id="beginning" data-phase="0">
+        <div className="storyCopy">
+          <p className="eyebrow"><span>{phase.number}</span> / {phase.kicker}</p>
+          <h1>{phase.title}</h1>
+          <p className="storyText">{phase.text}</p>
+          <button className="continue" onClick={() => moveToPhase(1)}>Begin the journey <span>↓</span></button>
         </div>
       </section>
 
-      <section className="introSection" id="story">
-        <div>
-          <p className="eyebrow">01 / The beginning</p>
-          <h2>Good things<br /><em>take time.</em></h2>
-        </div>
-        <p>
-          There is something beautiful about watching a small thing become
-          something that can outlive us. Sora is built around that feeling.
-        </p>
+      <section className="story" id="roots" data-phase="1">
+        <div className="storyCopy"><p className="eyebrow">02 / Taking root</p><h2>Then it<br /><em>takes root.</em></h2><p className="storyText">Slowly, almost unseen, life settles into its place and reaches for the light.</p><button className="continue" onClick={() => moveToPhase(2)}>Keep going <span>↓</span></button></div>
       </section>
 
-      <section className="aboutSection" id="about">
-        <p className="eyebrow">02 / The idea</p>
-        <div className="aboutGrid">
-          <h2>Plant something<br /><em>worth remembering.</em></h2>
-          <p>
-            Choose a tree, give it a place to grow, and follow its journey.
-            Over time, Sora will become a quiet record of the life you helped begin.
-          </p>
-        </div>
+      <section className="story" id="growing" data-phase="2">
+        <div className="storyCopy"><p className="eyebrow">03 / Growing</p><h2>Little by<br /><em>little.</em></h2><p className="storyText">A stem becomes a branch. A branch becomes shade. Time does the rest.</p><button className="continue" onClick={() => moveToPhase(0)}>Start again <span>↗</span></button></div>
       </section>
 
-      <section className="beginSection" id="begin">
-        <p className="eyebrow">03 / Your turn</p>
-        <h2>Every tree<br /><em>starts somewhere.</em></h2>
-        <a className="primaryButton" href="#top">Plant the first one <span>↗</span></a>
-      </section>
-
-      <footer className="footer">
-        <span>SORA</span>
-        <span>Made for things that grow.</span>
-      </footer>
+      <div className="treeCaption">{phase.kicker} · {phase.number}</div>
+      <div className="grain" aria-hidden="true" />
     </main>
   )
 }
