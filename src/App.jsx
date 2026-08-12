@@ -1,134 +1,86 @@
-import { useEffect, useRef, useState } from 'react'
-import './App.css'
-
-const phases = [
-  {
-    number: '01',
-    title: <>Some things<br />begin <em>quietly.</em></>,
-    body: <>A seed beneath the earth.<br />A little rain.<br />And enough time to grow.</>,
-  },
-  {
-    number: '02',
-    title: <>Then it<br />takes <em>root.</em></>,
-    body: <>Slowly, almost unseen,<br />life begins to settle into place.</>,
-  },
-  {
-    number: '03',
-    title: <>Little by<br /><em>little.</em></>,
-    body: <>A stem becomes a branch.<br />A branch reaches for the light.</>,
-  },
-]
-
 function App() {
-  const audioRef = useRef(null)
-  const [playing, setPlaying] = useState(false)
-  const [phaseIndex, setPhaseIndex] = useState(0)
-
-  useEffect(() => {
-    const onKeyDown = (event) => {
-      if (event.key === 'ArrowDown') {
-        setPhaseIndex((index) => Math.min(index + 1, phases.length - 1))
-      }
-      if (event.key === 'ArrowUp') {
-        setPhaseIndex((index) => Math.max(index - 1, 0))
-      }
-    }
-
-    window.addEventListener('keydown', onKeyDown)
-    return () => window.removeEventListener('keydown', onKeyDown)
-  }, [])
-
-  const toggleMusic = async () => {
-    const audio = audioRef.current
-    if (!audio) return
-
-    audio.volume = 0.37
-
-    try {
-      if (audio.paused) {
-        await audio.play()
-        setPlaying(true)
-      } else {
-        audio.pause()
-        setPlaying(false)
-      }
-    } catch {
-      setPlaying(false)
-    }
-  }
-
-  const currentPhase = phases[phaseIndex]
-
   return (
-    <main className="sora">
-      <audio ref={audioRef} src="/audio/ambient.mp3" loop preload="auto" />
+    <div className="sora">
+      <header className="navbar">
+        <a className="brand" href="/" aria-label="Sora home">
+          SORA
+        </a>
 
-      <section className="hero">
-        <header className="nav">
-          <div className="logo">SORA</div>
+        <nav className="navLinks" aria-label="Main navigation">
+          <a href="#about">About</a>
+          <a href="#journey">Journey</a>
+          <a href="#contact">Contact</a>
+        </nav>
+      </header>
 
-          <button className="sound" type="button" onClick={toggleMusic}>
-            <span className={`sound-dot ${playing ? 'is-playing' : ''}`} />
-            {playing ? 'Sound on · 37%' : 'Sound off · 37%'}
-          </button>
-        </header>
+      <main>
+        <section className="hero" aria-labelledby="hero-title">
+          <div className="heroContent">
+            <p className="eyebrow">A quiet place to grow</p>
+            <h1 id="hero-title">Something beautiful can begin with a seed.</h1>
+            <p className="heroText">
+              Sora is a simple space built around trees, growth, and the small
+              things that become meaningful with time.
+            </p>
 
-        <div className="phaseArea">
-          <div className="phase" key={phaseIndex}>
-            <div className="phaseLabel">
-              <span>{currentPhase.number}</span>
-              <span className="line" />
-              <span>THE BEGINNING</span>
+            <div className="heroActions">
+              <a className="primaryButton" href="#journey">Explore Sora</a>
+              <a className="textButton" href="#about">Learn more <span>→</span></a>
             </div>
-
-            <h1>{currentPhase.title}</h1>
-
-            <p>{currentPhase.body}</p>
-
-            <button
-              className="journey"
-              type="button"
-              onClick={() => setPhaseIndex((index) => Math.min(index + 1, phases.length - 1))}
-            >
-              {phaseIndex === phases.length - 1 ? 'Stay awhile' : 'Continue'}
-              <span>↘</span>
-            </button>
           </div>
-        </div>
 
-        <div className="treeArea" aria-hidden="true">
-          <div className="warmGlow" />
-
-          <div className="leafDrift leafDriftOne">🍂</div>
-          <div className="leafDrift leafDriftTwo">🍂</div>
-          <div className="leafDrift leafDriftThree">🍂</div>
-          <div className="leafDrift leafDriftFour">🍂</div>
-
-          <div className="treeScene">
-            <img src="/images/tree.png" className="tree" alt="" />
+          <div className="heroVisual" aria-hidden="true">
+            <div className="sun" />
+            <div className="treeIllustration">
+              <div className="canopy canopyOne" />
+              <div className="canopy canopyTwo" />
+              <div className="canopy canopyThree" />
+              <div className="trunk" />
+              <div className="ground" />
+            </div>
           </div>
-        </div>
+        </section>
 
-        <div className="phaseRail" aria-label="Story phases">
-          {phases.map((phase, index) => (
-            <button
-              key={phase.number}
-              type="button"
-              aria-label={`Go to phase ${phase.number}`}
-              className={index === phaseIndex ? 'active' : ''}
-              onClick={() => setPhaseIndex(index)}
-            >
-              {phase.number}
-            </button>
-          ))}
-        </div>
+        <section className="intro" id="about">
+          <p className="eyebrow">The idea</p>
+          <h2>Give something a place to grow.</h2>
+          <p>
+            Sora will become a home for a tree-planting experience where every
+            tree has a story, a place, and a journey worth following.
+          </p>
+        </section>
 
-        <div className="scrollHint">
-          <span>SCROLL</span>
-          <div className="scrollLine" />
-        </div>
-      </section>
-    </main>
+        <section className="journey" id="journey">
+          <div>
+            <p className="eyebrow">The journey</p>
+            <h2>Plant. Grow. Remember.</h2>
+          </div>
+
+          <div className="steps">
+            <article>
+              <span>01</span>
+              <h3>Choose</h3>
+              <p>Choose the tree you want to support.</p>
+            </article>
+            <article>
+              <span>02</span>
+              <h3>Plant</h3>
+              <p>Your contribution helps put a real tree in the ground.</p>
+            </article>
+            <article>
+              <span>03</span>
+              <h3>Follow</h3>
+              <p>Follow its story as it grows through the seasons.</p>
+            </article>
+          </div>
+        </section>
+      </main>
+
+      <footer id="contact">
+        <span>SORA</span>
+        <span>Something worth growing.</span>
+      </footer>
+    </div>
   )
 }
 
