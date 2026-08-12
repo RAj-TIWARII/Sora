@@ -1,0 +1,1 @@
+Layered tree assets are generated from the supplied painted artwork. Binary PNGs are added through Git's blob/tree API.
