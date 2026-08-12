@@ -2,35 +2,56 @@
 
 :root { font-family: 'Inter', sans-serif; color: #eee7d8; background: #171510; font-synthesis: none; text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; }
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; scroll-snap-type: y proximity; }
 body { margin: 0; min-width: 320px; background: #171510; }
 button, a { font: inherit; -webkit-tap-highlight-color: transparent; }
 a { color: inherit; text-decoration: none; }
 
 .sora { position: relative; min-height: 300vh; overflow: clip; background: #171510; isolation: isolate; }
-.ambient { position: fixed; inset: 0; z-index: -5; pointer-events: none; background: radial-gradient(circle at 78% 43%, rgba(213,142,66,.15), transparent 30%), radial-gradient(circle at 20% 72%, rgba(93,66,38,.12), transparent 38%), #171510; transition: background 1.8s ease; }
-.theme-morning .ambient { background: radial-gradient(circle at 78% 42%, rgba(190,151,87,.13), transparent 32%), radial-gradient(circle at 17% 70%, rgba(93,82,55,.13), transparent 40%), #191814; }
-.theme-golden .ambient { background: radial-gradient(circle at 76% 45%, rgba(222,159,74,.18), transparent 32%), radial-gradient(circle at 25% 80%, rgba(108,64,36,.12), transparent 42%), #181510; }
 
-.nav { position: fixed; inset: 0 0 auto; height: 86px; padding: 0 clamp(25px, 5vw, 76px); display: flex; align-items: center; justify-content: space-between; z-index: 100; background: linear-gradient(to bottom, rgba(23,21,16,.78), rgba(23,21,16,0)); backdrop-filter: blur(4px); }
+.nav { position: fixed; inset: 0 0 auto; height: 86px; padding: 0 clamp(25px, 5vw, 76px); display: flex; align-items: center; justify-content: space-between; z-index: 100; background: linear-gradient(to bottom, rgba(23,21,16,.72), rgba(23,21,16,0)); backdrop-filter: blur(5px); }
 .logo { font-size: 14px; letter-spacing: .42em; }
-.navRight { display: flex; align-items: center; gap: 28px; }
-.season { color: #777268; font-size: 10px; letter-spacing: .12em; }
-.sound { display: flex; align-items: center; gap: 8px; border: 0; padding: 7px 0; color: #9a9386; background: transparent; font-size: 10px; letter-spacing: .12em; cursor: pointer; }
-.sound:hover, .sound.on { color: #eee7d8; }
-.soundIcon { font-size: 15px; line-height: 1; }
+.navWhisper { color: #777268; font-size: 9px; letter-spacing: .16em; text-transform: uppercase; }
 
-.treeStage { position: fixed; inset: 0 0 0 42%; z-index: 2; pointer-events: none; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-.treeHalo { position: absolute; width: min(60vw, 850px); aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle, rgba(214,144,67,.13), rgba(214,144,67,.035) 45%, transparent 70%); filter: blur(12px); animation: haloPulse 9s ease-in-out infinite; }
-.treeBreath { position: relative; width: min(720px, 82%); height: 88vh; display: flex; align-items: center; justify-content: center; transform-origin: 50% 88%; animation: treeBreath 8s ease-in-out infinite; }
-.realTree { width: min(560px, 86%); max-height: 82vh; object-fit: contain; display: block; filter: drop-shadow(0 24px 34px rgba(35,17,13,.2)); }
+.ambient { position: fixed; inset: 0; z-index: -5; pointer-events: none; overflow: hidden; background: #171510; }
+.ambientTone, .ambientVignette { position: absolute; inset: 0; transition: opacity 1.8s cubic-bezier(.22,.61,.36,1), transform 2.4s ease; }
+.ambientTone { opacity: 0; }
+.toneDawn { background: radial-gradient(circle at 78% 43%, rgba(213,142,66,.16), transparent 31%), radial-gradient(circle at 18% 74%, rgba(82,58,35,.11), transparent 39%); }
+.toneMorning { background: radial-gradient(circle at 77% 39%, rgba(194,160,98,.14), transparent 33%), radial-gradient(circle at 21% 72%, rgba(102,85,52,.12), transparent 40%); }
+.toneGolden { background: radial-gradient(circle at 76% 48%, rgba(230,163,77,.18), transparent 34%), radial-gradient(circle at 25% 78%, rgba(114,62,34,.14), transparent 43%); }
+.ambientVignette { background: radial-gradient(circle at center, transparent 45%, rgba(9,8,6,.38) 100%); opacity: .78; }
+.tone-dawn .toneDawn, .tone-morning .toneMorning, .tone-golden .toneGolden { opacity: 1; }
 
-.story { position: relative; z-index: 10; min-height: 100svh; width: 100%; display: flex; align-items: center; padding: 120px 55% 100px clamp(28px, 8vw, 130px); }
-.storyCopy { width: min(520px, 100%); animation: copyIn .9s ease both; }
+.treeStage { position: fixed; inset: 0 0 0 40%; z-index: 2; pointer-events: none; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.treeHalo { position: absolute; width: min(60vw, 840px); aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle, rgba(214,144,67,.15), rgba(214,144,67,.035) 45%, transparent 70%); filter: blur(13px); animation: haloPulse 9s ease-in-out infinite; }
+
+.treeArtwork, .treeStructure { position: absolute; width: min(660px, 78%); height: min(750px, 86vh); display: flex; align-items: center; justify-content: center; transform-origin: 50% 88%; }
+.treeArtwork img, .treeStructure img { width: min(570px, 88%); max-height: 82vh; object-fit: contain; display: block; }
+.treeBase { z-index: 3; opacity: .98; }
+.treeBack { z-index: 4; clip-path: inset(0 0 47% 0); animation: backSway 8.5s ease-in-out infinite; }
+.treeMain { z-index: 5; clip-path: inset(9% 0 29% 0); animation: mainSway 7.1s ease-in-out -.8s infinite; }
+.treeFront { z-index: 6; clip-path: inset(31% 0 23% 0); animation: frontSway 6.4s ease-in-out -1.2s infinite; }
+.treeStructure { z-index: 7; clip-path: inset(32% 0 0 0); animation: structureSway 10s ease-in-out infinite; }
+
+.windLayer, .leafLayer { position: absolute; inset: 0; overflow: hidden; }
+.windLayer { z-index: 15; }
+.windLayer i { position: absolute; left: calc(26% + var(--i) * 5.8%); top: calc(28% + (var(--i) % 5) * 10%); width: calc(30px + (var(--i) % 4) * 13px); height: 1px; border-radius: 50%; background: linear-gradient(90deg, transparent, rgba(224,212,188,.22), transparent); opacity: 0; animation: breeze calc(6s + var(--i) * .48s) calc(var(--i) * -.7s) ease-in-out infinite; }
+
+.leafLayer { z-index: 18; }
+.leafLayer i { position: absolute; left: calc(43% + var(--i) * 2.45%); top: calc(26% + (var(--i) % 6) * 4%); width: calc(7px + (var(--i) % 3) * 2px); height: calc(10px + (var(--i) % 4) * 2px); border-radius: 80% 16% 80% 16%; background: linear-gradient(145deg, #efa04b, #aa462a); opacity: 0; transform-origin: 50% 20%; animation: leafFall calc(7s + var(--i) * .43s) calc(var(--i) * -.82s) linear infinite; }
+.leafLayer i:nth-child(4n) { background: linear-gradient(145deg, #d97834, #8e3a2c); }
+.leafLayer i:nth-child(5n) { background: linear-gradient(145deg, #f1b25a, #b9552b); }
+
+.mist { position: absolute; width: 42%; height: 13%; border-radius: 50%; background: rgba(213,201,177,.025); filter: blur(28px); animation: mistMove 13s ease-in-out infinite; z-index: 12; }
+.mistOne { left: 8%; bottom: 11%; }
+.mistTwo { right: 4%; bottom: 23%; animation-delay: -6s; }
+
+.story { position: relative; z-index: 10; min-height: 100svh; width: 100%; display: flex; align-items: center; padding: 120px 55% 100px clamp(28px, 8vw, 130px); scroll-snap-align: start; }
+.storyCopy { width: min(520px, 100%); animation: copyIn .9s cubic-bezier(.22,.61,.36,1) both; }
 .eyebrow { margin: 0 0 28px; color: #837c6e; font-size: 10px; letter-spacing: .25em; text-transform: uppercase; }
 .eyebrow span { color: #b89a6d; }
-h1, h2 { margin: 0; font-family: 'Cormorant Garamond', serif; font-weight: 400; font-size: clamp(68px, 7.5vw, 112px); line-height: .84; letter-spacing: -.045em; }
-h1 em, h2 em { color: #bd9d6d; font-style: italic; }
+h1 { margin: 0; font-family: 'Cormorant Garamond', serif; font-weight: 400; font-size: clamp(68px, 7.5vw, 112px); line-height: .84; letter-spacing: -.045em; }
+h1 em { color: #bd9d6d; font-style: italic; }
 .storyText { max-width: 390px; margin: 38px 0 0; color: #aaa295; font-family: 'Cormorant Garamond', serif; font-size: 20px; line-height: 1.65; }
 .continue { display: inline-flex; align-items: center; gap: 28px; margin-top: 36px; padding: 12px 0; border: 0; border-bottom: 1px solid #5a554b; background: transparent; color: #d9d0c0; font-size: 10px; letter-spacing: .15em; cursor: pointer; transition: gap .35s ease, color .35s ease, border-color .35s ease; }
 .continue:hover { gap: 42px; color: #fff; border-color: #b89a6d; }
@@ -42,43 +63,39 @@ h1 em, h2 em { color: #bd9d6d; font-style: italic; }
 .phaseRail button.active i { width: 30px; background: #b89a6d; }
 .treeCaption { position: fixed; right: 7%; bottom: 30px; z-index: 20; color: #655f54; font-size: 8px; letter-spacing: .2em; text-transform: uppercase; }
 
-.windLayer, .leafLayer { position: absolute; inset: 0; overflow: hidden; }
-.windLayer i { position: absolute; left: calc(30% + var(--i) * 5.8%); top: calc(30% + (var(--i) % 4) * 11%); width: 35px; height: 1px; border-radius: 50%; background: linear-gradient(90deg, transparent, rgba(218,207,183,.3), transparent); opacity: 0; animation: breeze 7s calc(var(--i) * -.7s) ease-in-out infinite; }
-.leafLayer i { position: absolute; left: calc(42% + var(--i) * 2.2%); top: calc(28% + (var(--i) % 5) * 4%); width: 8px; height: 12px; border-radius: 80% 12% 80% 12%; background: linear-gradient(145deg, #e79a3b, #a94a29); opacity: 0; animation: leafFall calc(8s + var(--i) * .4s) calc(var(--i) * -.85s) linear infinite; }
-.mist { position: absolute; width: 40%; height: 13%; border-radius: 50%; background: rgba(213,201,177,.025); filter: blur(28px); animation: mistMove 13s ease-in-out infinite; }
-.mistOne { left: 10%; bottom: 12%; }.mistTwo { right: 4%; bottom: 23%; animation-delay: -6s; }
-
 .grain { position: fixed; inset: 0; z-index: 60; pointer-events: none; opacity: .035; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E"); mix-blend-mode: soft-light; }
 
-@keyframes treeBreath { 0%,100% { transform: rotate(-.35deg) translate3d(0,0,0); } 50% { transform: rotate(.4deg) translate3d(4px,-4px,0); } }
-@keyframes haloPulse { 0%,100% { opacity: .75; transform: scale(1); } 50% { opacity: 1; transform: scale(1.035); } }
-@keyframes copyIn { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes leafFall { 0% { opacity: 0; transform: translate3d(0,-15px,0) rotate(0); } 12% { opacity: .8; } 48% { transform: translate3d(52px,210px,0) rotate(155deg); } 72% { transform: translate3d(-12px,360px,0) rotate(245deg); } 100% { opacity: 0; transform: translate3d(35px,610px,0) rotate(360deg); } }
-@keyframes breeze { 0%,100% { opacity: 0; transform: translateX(-10px); } 30% { opacity: .35; } 65% { opacity: .08; transform: translateX(90px); } }
-@keyframes mistMove { 0%,100% { transform: translateX(-20px); opacity: .35; } 50% { transform: translateX(35px); opacity: .65; } }
+@keyframes backSway { 0%,100% { transform: rotate(-.35deg) translate3d(-1px,0,0); } 50% { transform: rotate(.45deg) translate3d(2px,-2px,0); } }
+@keyframes mainSway { 0%,100% { transform: rotate(-.55deg) translate3d(-2px,0,0); } 50% { transform: rotate(.7deg) translate3d(4px,-3px,0); } }
+@keyframes frontSway { 0%,100% { transform: rotate(-.8deg) translate3d(-3px,0,0); } 50% { transform: rotate(1deg) translate3d(5px,-4px,0); } }
+@keyframes structureSway { 0%,100% { transform: rotate(-.12deg); } 50% { transform: rotate(.16deg) translateY(-1px); } }
+@keyframes haloPulse { 0%,100% { opacity:.7; transform:scale(1); } 50% { opacity:1; transform:scale(1.035); } }
+@keyframes copyIn { from { opacity:0; transform:translateY(18px); } to { opacity:1; transform:translateY(0); } }
+@keyframes leafFall { 0% { opacity:0; transform:translate3d(0,-18px,0) rotate(-15deg); } 10% { opacity:.8; } 35% { transform:translate3d(30px,140px,0) rotate(110deg); } 60% { transform:translate3d(-8px,285px,0) rotate(210deg); } 100% { opacity:0; transform:translate3d(34px,590px,0) rotate(360deg); } }
+@keyframes breeze { 0%,100% { opacity:0; transform:translateX(-18px) scaleX(.7); } 25% { opacity:.25; } 65% { opacity:.08; transform:translateX(100px) scaleX(1.25); } }
+@keyframes mistMove { 0%,100% { transform:translateX(-20px); opacity:.35; } 50% { transform:translateX(35px); opacity:.65; } }
 
-@media (prefers-reduced-motion: reduce) { *,*::before,*::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration:.01ms !important; animation-iteration-count:1 !important; scroll-behavior:auto !important; } }
 
 @media (max-width: 850px) {
-  .nav { height: 70px; padding: 0 22px; }
-  .season { display: none; }
-  .treeStage { inset: 36% 0 0; opacity: .86; }
-  .treeBreath { width: 100%; height: 64vh; align-items: flex-end; }
-  .realTree { width: min(480px, 88%); max-height: 58vh; }
-  .treeHalo { width: 90vw; }
-  .story { min-height: 100svh; align-items: flex-start; padding: 120px 28px 110px; }
-  .storyCopy { margin-top: 7vh; }
-  h1, h2 { font-size: clamp(62px, 17vw, 88px); }
-  .storyText { font-size: 18px; max-width: 310px; }
-  .phaseRail { right: 15px; }
-  .phaseRail button span { display: none; }
-  .treeCaption { right: 20px; bottom: 18px; }
+  .nav { height:70px; padding:0 22px; }
+  .navWhisper { display:none; }
+  .treeStage { inset:38% 0 0; opacity:.86; }
+  .treeArtwork, .treeStructure { width:100%; height:65vh; }
+  .treeArtwork img, .treeStructure img { width:min(500px,92%); max-height:60vh; }
+  .treeHalo { width:90vw; }
+  .story { min-height:100svh; align-items:flex-start; padding:120px 42px 110px 28px; }
+  .storyCopy { margin-top:7vh; }
+  h1 { font-size:clamp(62px,17vw,88px); }
+  .storyText { font-size:18px; max-width:310px; }
+  .phaseRail { right:15px; }
+  .phaseRail button span { display:none; }
+  .treeCaption { right:20px; bottom:18px; }
 }
 
 @media (max-width: 480px) {
-  .logo { font-size: 12px; }
-  .sound { font-size: 9px; }
-  .treeStage { inset: 43% 0 0; }
-  .realTree { width: 94%; }
-  .story { padding-left: 23px; padding-right: 45px; }
+  .logo { font-size:12px; }
+  .treeStage { inset:44% 0 0; }
+  .treeArtwork img, .treeStructure img { width:95%; }
+  .story { padding-left:23px; padding-right:45px; }
 }
