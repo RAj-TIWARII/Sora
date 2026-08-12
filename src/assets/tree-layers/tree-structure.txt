@@ -1,0 +1,1 @@
+The binary PNG layers are committed from the source artwork through the Git object API.
