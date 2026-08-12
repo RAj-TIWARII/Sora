@@ -1,86 +1,90 @@
+import './App.css'
+
+const leaves = Array.from({ length: 16 }, (_, index) => index)
+const petals = Array.from({ length: 10 }, (_, index) => index)
+
 function App() {
   return (
-    <div className="sora">
-      <header className="navbar">
-        <a className="brand" href="/" aria-label="Sora home">
-          SORA
-        </a>
-
+    <main className="sora">
+      <header className="nav">
+        <a className="logo" href="#top" aria-label="Sora home">SORA</a>
         <nav className="navLinks" aria-label="Main navigation">
+          <a href="#story">Story</a>
           <a href="#about">About</a>
-          <a href="#journey">Journey</a>
-          <a href="#contact">Contact</a>
+          <a href="#begin">Begin</a>
         </nav>
       </header>
 
-      <main>
-        <section className="hero" aria-labelledby="hero-title">
-          <div className="heroContent">
-            <p className="eyebrow">A quiet place to grow</p>
-            <h1 id="hero-title">Something beautiful can begin with a seed.</h1>
-            <p className="heroText">
-              Sora is a simple space built around trees, growth, and the small
-              things that become meaningful with time.
-            </p>
-
-            <div className="heroActions">
-              <a className="primaryButton" href="#journey">Explore Sora</a>
-              <a className="textButton" href="#about">Learn more <span>→</span></a>
-            </div>
-          </div>
-
-          <div className="heroVisual" aria-hidden="true">
-            <div className="sun" />
-            <div className="treeIllustration">
-              <div className="canopy canopyOne" />
-              <div className="canopy canopyTwo" />
-              <div className="canopy canopyThree" />
-              <div className="trunk" />
-              <div className="ground" />
-            </div>
-          </div>
-        </section>
-
-        <section className="intro" id="about">
-          <p className="eyebrow">The idea</p>
-          <h2>Give something a place to grow.</h2>
-          <p>
-            Sora will become a home for a tree-planting experience where every
-            tree has a story, a place, and a journey worth following.
+      <section className="hero" id="top">
+        <div className="heroCopy">
+          <p className="eyebrow">A quiet place to begin</p>
+          <h1>Let something<br /><em>grow.</em></h1>
+          <p className="heroText">
+            Sora is a little corner of the internet for planting,
+            growing, and remembering the things that matter.
           </p>
-        </section>
+          <a className="primaryButton" href="#begin">Begin the journey <span>↗</span></a>
+        </div>
 
-        <section className="journey" id="journey">
-          <div>
-            <p className="eyebrow">The journey</p>
-            <h2>Plant. Grow. Remember.</h2>
+        <div className="scene" aria-label="A peaceful animated tree">
+          <div className="sunGlow" />
+          <div className="airParticles" aria-hidden="true">
+            {petals.map((petal) => <i key={petal} style={{ '--i': petal }} />)}
+          </div>
+          <div className="fallingLeaves" aria-hidden="true">
+            {leaves.map((leaf) => <i key={leaf} style={{ '--i': leaf }} />)}
           </div>
 
-          <div className="steps">
-            <article>
-              <span>01</span>
-              <h3>Choose</h3>
-              <p>Choose the tree you want to support.</p>
-            </article>
-            <article>
-              <span>02</span>
-              <h3>Plant</h3>
-              <p>Your contribution helps put a real tree in the ground.</p>
-            </article>
-            <article>
-              <span>03</span>
-              <h3>Follow</h3>
-              <p>Follow its story as it grows through the seasons.</p>
-            </article>
+          <div className="treeIllustration" aria-hidden="true">
+            <div className="canopy canopyBack" />
+            <div className="canopy canopyMain" />
+            <div className="canopy canopyFront" />
+            <div className="branch branchOne" />
+            <div className="branch branchTwo" />
+            <div className="branch branchThree" />
+            <div className="trunk" />
+            <div className="ground" />
+            <div className="grass grassOne" />
+            <div className="grass grassTwo" />
           </div>
-        </section>
-      </main>
 
-      <footer id="contact">
+          <p className="sceneCaption">a little life, moving with the wind</p>
+        </div>
+      </section>
+
+      <section className="introSection" id="story">
+        <div>
+          <p className="eyebrow">01 / The beginning</p>
+          <h2>Good things<br /><em>take time.</em></h2>
+        </div>
+        <p>
+          There is something beautiful about watching a small thing become
+          something that can outlive us. Sora is built around that feeling.
+        </p>
+      </section>
+
+      <section className="aboutSection" id="about">
+        <p className="eyebrow">02 / The idea</p>
+        <div className="aboutGrid">
+          <h2>Plant something<br /><em>worth remembering.</em></h2>
+          <p>
+            Choose a tree, give it a place to grow, and follow its journey.
+            Over time, Sora will become a quiet record of the life you helped begin.
+          </p>
+        </div>
+      </section>
+
+      <section className="beginSection" id="begin">
+        <p className="eyebrow">03 / Your turn</p>
+        <h2>Every tree<br /><em>starts somewhere.</em></h2>
+        <a className="primaryButton" href="#top">Plant the first one <span>↗</span></a>
+      </section>
+
+      <footer className="footer">
         <span>SORA</span>
-        <span>Something worth growing.</span>
+        <span>Made for things that grow.</span>
       </footer>
-    </div>
+    </main>
   )
 }
 
